@@ -1,18 +1,16 @@
-import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_test/flutter_test.dart";
 
 import "package:twitch_tmi/twitch_tmi.dart";
 
 void main() {
   test("connect to chat", () async {
-    await dotenv.load();
-    final token = dotenv.env["ACCESS_TOKEN"];
+    const token = "";
     expect(token, isNotNull);
 
     final tmiClient = TmiClient(
       username: "SebbDev",
       channels: ["SebbDev"],
-      token: token!,
+      token: token,
       logs: true,
     );
     tmiClient.connect();
