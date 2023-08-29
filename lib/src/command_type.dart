@@ -1,0 +1,17 @@
+enum CommandType {
+  join,
+  part,
+  notice,
+  clearChat,
+  hostTarget,
+  privMsg,
+  ping,
+  cap,
+  globalUserState,
+  userState,
+  roomState,
+  reconnect,
+  unsupported,
+  loggedIn,
+  unknown,
+}

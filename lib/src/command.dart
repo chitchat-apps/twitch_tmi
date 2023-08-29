@@ -1,4 +1,4 @@
-import "package:twitch_tmi/src/message_parser.dart";
+import "package:twitch_tmi/src/command_type.dart";
 
 class Command {
   final String raw;

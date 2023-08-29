@@ -1,4 +1,5 @@
 import "package:twitch_tmi/src/command.dart";
+import "package:twitch_tmi/src/command_type.dart";
 import "package:twitch_tmi/src/parameters.dart";
 import "package:twitch_tmi/src/source.dart";
 
@@ -216,24 +217,6 @@ abstract class IrcCommands {
   static const String unsupported = "421";
   static const String loggedIn = "001";
   static const String none = "NONE";
-}
-
-enum CommandType {
-  join,
-  part,
-  notice,
-  clearChat,
-  hostTarget,
-  privMsg,
-  ping,
-  cap,
-  globalUserState,
-  userState,
-  roomState,
-  reconnect,
-  unsupported,
-  loggedIn,
-  unknown,
 }
 
 class ParseResult {

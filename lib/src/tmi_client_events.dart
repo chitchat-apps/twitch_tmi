@@ -1,3 +1,4 @@
+import "package:twitch_tmi/src/command_type.dart";
 import "package:twitch_tmi/src/message_parser.dart";
 import "package:twitch_tmi/twitch_tmi.dart";
 
@@ -27,6 +28,7 @@ abstract class TmiClientEvent {
             channel: result.command.channel!,
             message: result.parameters?.message ?? "",
             source: result.source!,
+            commandType: result.command.type,
             isAction: result.parameters?.isAction ?? false,
             isMention: result.parameters?.isMention ?? false,
             isSelf: username?.toLowerCase() == result.source?.nick,
@@ -87,6 +89,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
   final Source source;
   final String channel;
   final String message;
+  final CommandType commandType;
   final bool isAction;
   final bool isMention;
   final bool isNotice;
@@ -97,6 +100,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
     required this.source,
     required this.channel,
     required this.message,
+    required this.commandType,
     this.isAction = false,
     this.isMention = false,
     this.isNotice = false,
@@ -110,6 +114,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
     return TmiClientMessageEvent(
       message: message,
       channel: channel,
+      commandType: CommandType.notice,
       source: Source(
         raw: ":tmi.twitch.tv",
         host: "tmi.twitch.tv",

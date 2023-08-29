@@ -1,7 +1,6 @@
 import "package:flutter_test/flutter_test.dart";
-import "package:twitch_tmi/src/command.dart";
 import "package:twitch_tmi/src/message_parser.dart";
-import "package:twitch_tmi/src/source.dart";
+import "package:twitch_tmi/twitch_tmi.dart";
 
 void main() {
   test("parse PING message", () {
