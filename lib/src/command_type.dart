@@ -2,6 +2,7 @@ enum CommandType {
   join,
   part,
   notice,
+  clearMessage,
   clearChat,
   hostTarget,
   privMsg,

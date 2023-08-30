@@ -1,9 +1,9 @@
-import "package:twitch_tmi/src/command_type.dart";
 import "package:twitch_tmi/src/message_parser.dart";
 import "package:twitch_tmi/twitch_tmi.dart";
 
 enum TmiClientEventType {
   message,
+  clearMessage,
   ping,
   connected,
   disconnected,
@@ -32,6 +32,20 @@ abstract class TmiClientEvent {
             isAction: result.parameters?.isAction ?? false,
             isMention: result.parameters?.isMention ?? false,
             isSelf: username?.toLowerCase() == result.source?.nick,
+          );
+        case CommandType.clearChat:
+          final targetId = result.tags?["target-msg-id"];
+          if (targetId == null) {
+            return TmiClientRawEvent(raw: parser.raw);
+          }
+
+          return TmiClientClearMessageEvent(
+            tags: result.tags,
+            source: result.source!,
+            channel: result.command.channel!,
+            message: result.parameters?.message ?? "",
+            commandType: result.command.type,
+            targetId: targetId,
           );
         case CommandType.notice:
           return TmiClientMessageEvent.notice(
@@ -71,29 +85,29 @@ class TmiClientDisconnectedEvent extends TmiClientEvent {
 }
 
 class TmiClientErrorEvent extends TmiClientEvent {
-  final String message;
+  String message;
 
   TmiClientErrorEvent({required this.message})
       : super(type: TmiClientEventType.error);
 }
 
 class TmiClientPingEvent extends TmiClientEvent {
-  final String host;
+  String host;
 
   TmiClientPingEvent({required this.host})
       : super(type: TmiClientEventType.ping);
 }
 
 class TmiClientMessageEvent extends TmiClientEvent {
-  final Map<String, String>? tags;
-  final Source source;
-  final String channel;
-  final String message;
-  final CommandType commandType;
-  final bool isAction;
-  final bool isMention;
-  final bool isNotice;
-  final bool isSelf;
+  Map<String, String>? tags;
+  Source source;
+  String channel;
+  String message;
+  CommandType commandType;
+  bool isAction;
+  bool isMention;
+  bool isNotice;
+  bool isSelf;
 
   TmiClientMessageEvent({
     this.tags,
@@ -122,4 +136,22 @@ class TmiClientMessageEvent extends TmiClientEvent {
       isNotice: true,
     );
   }
+}
+
+class TmiClientClearMessageEvent extends TmiClientEvent {
+  Map<String, String>? tags;
+  Source source;
+  String channel;
+  String message;
+  CommandType commandType;
+  String targetId;
+
+  TmiClientClearMessageEvent({
+    required this.source,
+    required this.channel,
+    required this.message,
+    required this.commandType,
+    required this.targetId,
+    this.tags,
+  }) : super(type: TmiClientEventType.clearMessage);
 }
