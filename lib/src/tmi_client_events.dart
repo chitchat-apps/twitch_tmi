@@ -4,6 +4,7 @@ import "package:twitch_tmi/twitch_tmi.dart";
 enum TmiClientEventType {
   message,
   clearMessage,
+  clearChat,
   ping,
   connected,
   disconnected,
@@ -29,11 +30,12 @@ abstract class TmiClientEvent {
             message: result.parameters?.message ?? "",
             source: result.source!,
             commandType: result.command.type,
+            displayName: result.tags?["display-name"],
             isAction: result.parameters?.isAction ?? false,
             isMention: result.parameters?.isMention ?? false,
             isSelf: username?.toLowerCase() == result.source?.nick,
           );
-        case CommandType.clearChat:
+        case CommandType.clearMessage:
           final targetId = result.tags?["target-msg-id"];
           if (targetId == null) {
             return TmiClientRawEvent(raw: parser.raw);
@@ -46,6 +48,15 @@ abstract class TmiClientEvent {
             message: result.parameters?.message ?? "",
             commandType: result.command.type,
             targetId: targetId,
+          );
+        case CommandType.clearChat:
+          return TmiClientClearChatEvent(
+            tags: result.tags,
+            source: result.source!,
+            channel: result.command.channel!,
+            user: result.parameters?.message,
+            duration: result.tags?["ban-duration"],
+            commandType: result.command.type,
           );
         case CommandType.notice:
           return TmiClientMessageEvent.notice(
@@ -105,6 +116,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
   String message;
   CommandType commandType;
   bool isAction;
+  String? displayName;
   bool isMention;
   bool isNotice;
   bool isSelf;
@@ -115,6 +127,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
     required this.channel,
     required this.message,
     required this.commandType,
+    this.displayName,
     this.isAction = false,
     this.isMention = false,
     this.isNotice = false,
@@ -154,4 +167,22 @@ class TmiClientClearMessageEvent extends TmiClientEvent {
     required this.targetId,
     this.tags,
   }) : super(type: TmiClientEventType.clearMessage);
+}
+
+class TmiClientClearChatEvent extends TmiClientEvent {
+  Map<String, String>? tags;
+  Source source;
+  String channel;
+  CommandType commandType;
+  String? user;
+  String? duration;
+
+  TmiClientClearChatEvent({
+    required this.source,
+    required this.channel,
+    required this.commandType,
+    required this.user,
+    required this.duration,
+    this.tags,
+  }) : super(type: TmiClientEventType.clearChat);
 }
