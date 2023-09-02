@@ -5,6 +5,7 @@ enum TmiClientEventType {
   message,
   clearMessage,
   clearChat,
+  userState,
   ping,
   connected,
   disconnected,
@@ -62,6 +63,17 @@ abstract class TmiClientEvent {
           return TmiClientMessageEvent.notice(
             message: result.parameters?.message ?? "",
             channel: result.command.channel!,
+          );
+        case CommandType.userState:
+          return TmiClientUserStateEvent(
+            tags: result.tags,
+            source: result.source!,
+            channel: result.command.channel!,
+            commandType: result.command.type,
+            color: result.tags?["color"] ?? "",
+            displayName: result.tags?["display-name"] ?? "",
+            mod: result.tags?["mod"] == "1",
+            subscriber: result.tags?["subscriber"] == "1",
           );
         case CommandType.join:
           return TmiClientMessageEvent.notice(
@@ -185,4 +197,26 @@ class TmiClientClearChatEvent extends TmiClientEvent {
     required this.duration,
     this.tags,
   }) : super(type: TmiClientEventType.clearChat);
+}
+
+class TmiClientUserStateEvent extends TmiClientEvent {
+  Map<String, String>? tags;
+  Source source;
+  String channel;
+  CommandType commandType;
+  String color;
+  String displayName;
+  bool mod;
+  bool subscriber;
+
+  TmiClientUserStateEvent({
+    required this.source,
+    required this.channel,
+    required this.commandType,
+    required this.color,
+    required this.displayName,
+    this.tags,
+    this.mod = false,
+    this.subscriber = false,
+  }) : super(type: TmiClientEventType.userState);
 }

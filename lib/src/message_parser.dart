@@ -151,6 +151,39 @@ class MessageParser {
           channel: parts.elementAtOrNull(1)?.substring(1),
         );
         break;
+      case IrcCommands.globalUserState:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.globalUserState,
+        );
+        break;
+      case IrcCommands.userState:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.userState,
+          channel: parts.elementAtOrNull(1)?.substring(1),
+        );
+        break;
+      case IrcCommands.roomState:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.roomState,
+          channel: parts.elementAtOrNull(1)?.substring(1),
+        );
+        break;
+      case IrcCommands.reconnect:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.reconnect,
+        );
+        break;
+      case IrcCommands.cap:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.cap,
+        );
+        break;
+      case IrcCommands.none:
       default:
         _command = Command(
           raw: rawCommand,
