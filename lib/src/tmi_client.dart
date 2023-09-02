@@ -91,6 +91,20 @@ class TmiClient {
     _streamController.add(TmiClientDisconnectedEvent());
   }
 
+  void send({required String channel, required String message}) {
+    _channel?.sink.add("PRIVMSG #$channel :$message");
+  }
+
+  void reply({
+    required String channel,
+    required String messageId,
+    required String message,
+  }) {
+    _channel?.sink.add(
+      "@reply-parent-msg-id=$messageId PRIVMSG #$channel :$message",
+    );
+  }
+
   void join(String channel) {
     _logger.d("Joining channel $channel");
     channel = channel.toLowerCase();
