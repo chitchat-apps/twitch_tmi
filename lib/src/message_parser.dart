@@ -118,6 +118,13 @@ class MessageParser {
           channel: parts.elementAtOrNull(1)?.substring(1),
         );
         break;
+      case IrcCommands.clearMessage:
+        _command = Command(
+          raw: rawCommand,
+          type: CommandType.clearMessage,
+          channel: parts.elementAtOrNull(1)?.substring(1),
+        );
+        break;
       case IrcCommands.clearChat:
         _command = Command(
           raw: rawCommand,
@@ -238,6 +245,7 @@ abstract class IrcCommands {
   static const String join = "JOIN";
   static const String part = "PART";
   static const String notice = "NOTICE";
+  static const String clearMessage = "CLEARMSG";
   static const String clearChat = "CLEARCHAT";
   static const String hostTarget = "HOSTTARGET";
   static const String privMsg = "PRIVMSG";
