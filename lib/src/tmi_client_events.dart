@@ -63,6 +63,7 @@ abstract class TmiClientEvent {
           return TmiClientMessageEvent.notice(
             message: result.parameters?.message ?? "",
             channel: result.command.channel!,
+            tags: result.tags,
           );
         case CommandType.userState:
           return TmiClientUserStateEvent(
@@ -149,6 +150,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
   factory TmiClientMessageEvent.notice({
     required String message,
     required String channel,
+    Map<String, String>? tags,
   }) {
     return TmiClientMessageEvent(
       message: message,
@@ -158,6 +160,7 @@ class TmiClientMessageEvent extends TmiClientEvent {
         raw: ":tmi.twitch.tv",
         host: "tmi.twitch.tv",
       ),
+      tags: tags,
       isNotice: true,
     );
   }
