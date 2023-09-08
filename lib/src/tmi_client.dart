@@ -83,11 +83,11 @@ class TmiClient {
   }
 
   void disconnect() {
-    _channel?.sink.close();
     _subscription?.cancel();
-    _connected = false;
-    _channel = null;
     _subscription = null;
+    _channel?.sink.close();
+    _channel = null;
+    _connected = false;
     _streamController.add(TmiClientDisconnectedEvent());
   }
 
@@ -176,13 +176,12 @@ class TmiClient {
   }
 
   void dispose() {
-    _channel?.sink.close();
-    _subscription?.cancel();
-    _connected = false;
-    _channel = null;
-    _subscription = null;
-
     _streamController.close();
+    _subscription?.cancel();
+    _subscription = null;
+    _channel?.sink.close();
+    _channel = null;
+    _connected = false;
 
     _logger.d("TmiClient disposed");
   }
